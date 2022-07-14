@@ -3,11 +3,14 @@ import express from "express";
 const app = express();
 
 // Send Request For Database Using JSON Server(Like Bodyparser)
-app.use(express.json())
+app.use(express.json());
 
 // Import Routers
 import router from "./routes/user-routes";
 app.use("/api/user", router);
+
+import blogRouter from "./routes/blog-routes";
+app.use("/api/blog", blogRouter);
 
 // import mongoDB database
 import mongoose from "mongoose";
