@@ -40,6 +40,7 @@ export const signup = async (req, res, next) => {
     name,
     email,
     password: hashedPassword,
+    blogs: [],
   });
 
   try {
@@ -72,7 +73,7 @@ export const signin = async (req, res, next) => {
   if (!isPasswordCorrect) {
     return res
       .status(400)
-      .json({ message: "Incorrect PAssword..! Try Again..!" });
+      .json({ message: "Incorrect Password..! Try Again..!" });
   }
   return res.status(200).json({ message: "USer Login Successful..!" });
 };
