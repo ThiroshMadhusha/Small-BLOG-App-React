@@ -15,10 +15,12 @@ const blogSchema = new Schema({
     type: String,
     required: true,
   },
+  // 1 user kenekta multiple blogs handle karanna puluwan nisa -->> type : mongoose.Types.ObjectId  lesa yodai
   user: {
-    type: String,
+    type: mongoose.Types.ObjectId,
+    ref:"User",
     required: true,
   },
 });
 
-export default mongoose.model("B;og", blogSchema);
+export default mongoose.model("Blog", blogSchema);
