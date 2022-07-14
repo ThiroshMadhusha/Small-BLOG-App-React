@@ -1,5 +1,6 @@
 import express from "express";
 import { getAllUser, signin, signup } from "../controllers/user-controller";
+
 const router = express.Router();
 
 // Create All User Routes
