@@ -2,6 +2,10 @@
 import express from "express";
 const app = express();
 
+// Import Cors
+import cors from "cors";
+app.use(cors());
+
 // Send Request For Database Using JSON Server(Like Bodyparser)
 app.use(express.json());
 
