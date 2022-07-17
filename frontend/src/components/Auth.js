@@ -1,7 +1,12 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authAction } from "../store";
 
 const Auth = () => {
+  // Change Project To REDUX
+  const dispatch = useDispatch();
   // This useState used for Button change and Form Names Change
   const [isSignup, setIsSignup] = useState(false);
 
@@ -24,6 +29,31 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs);
+
+    if (isSignup) {
+      sendRequest("signup")
+        .then(() => dispatch(authAction.login()))
+        .then((data) => console.log(data));
+    } else {
+      sendRequest()
+        .then(() => dispatch(authAction.login()))
+        .then((data) => console.log(data));
+    }
+  };
+
+  // send requests
+  // mehi type use karanne login ekata amatharawa signup eka thiyena nisa
+  const sendRequest = async (type = "signin") => {
+    const res = await axios
+      .post(`http://localhost:5000/api/user/${type}`, {
+        name: inputs.name,
+        email: inputs.email,
+        password: inputs.password,
+      })
+      .catch((error) => console.log(error));
+
+    const data = await res.data;
+    return data;
   };
 
   return (
