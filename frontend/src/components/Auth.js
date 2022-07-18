@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authAction } from "../store";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  // When USer Loging To System, He is Navigate to main blog page
+  const navigate = useNavigate();
+
   // Change Project To REDUX
   const dispatch = useDispatch();
   // This useState used for Button change and Form Names Change
@@ -30,14 +34,17 @@ const Auth = () => {
     e.preventDefault();
     console.log(inputs);
 
+    // ************************************************
     if (isSignup) {
       sendRequest("signup")
         .then(() => dispatch(authAction.login()))
-        .then((data) => console.log(data));
+        .then((data) => console.log(data))
+        .then(() => navigate("/blogs"));
     } else {
       sendRequest()
         .then(() => dispatch(authAction.login()))
-        .then((data) => console.log(data));
+        .then((data) => console.log(data))
+        .then(() => navigate("/blogs"));
     }
   };
 
@@ -53,6 +60,7 @@ const Auth = () => {
       .catch((error) => console.log(error));
 
     const data = await res.data;
+    console.log(data)
     return data;
   };
 
@@ -114,7 +122,7 @@ const Auth = () => {
             sx={{ borderRadius: 3, marginTop: 3 }}
           >
             Already {isSignup ? "Have" : "Haven't"} an Account.{" "}
-            {isSignup ? "Login" : "Signup"} Here
+            {isSignup ? "Login" : "Sign Up"} Here
           </Button>
         </Box>
       </form>
