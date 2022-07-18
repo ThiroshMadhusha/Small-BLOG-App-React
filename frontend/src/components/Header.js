@@ -9,12 +9,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { authAction } from "../store";
 
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
   const [value, setvalue] = useState();
+
+  // For Logout Buttonn Using useDispatch()
+  const dispatch = useDispatch();
   return (
     <AppBar
       position="sticky"
@@ -69,6 +73,7 @@ const Header = () => {
               color="warning"
               LinkComponent={Link}
               to="/auth"
+              onClick={() => dispatch(authAction.logout())}
             >
               LogOut
             </Button>
