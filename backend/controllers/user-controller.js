@@ -75,5 +75,7 @@ export const signin = async (req, res, next) => {
       .status(400)
       .json({ message: "Incorrect Password..! Try Again..!" });
   }
-  return res.status(200).json({ message: "USer Login Successful..!" });
+  return res
+    .status(200)
+    .json({ message: "USer Login Successful..!", user: existingUser });
 };
