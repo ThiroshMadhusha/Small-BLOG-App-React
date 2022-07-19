@@ -6,68 +6,54 @@ import { authAction } from "../store";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  // When USer Loging To System, He is Navigate to main blog page
-  const navigate = useNavigate();
-
-  // Change Project To REDUX
-  const dispatch = useDispatch();
-  // This useState used for Button change and Form Names Change
-  const [isSignup, setIsSignup] = useState(false);
-
-  // This useState use for Text Field
+  const naviagte = useNavigate();
+  const dispath = useDispatch();
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
     password: "",
   });
-
-  // handleChange For All TExt Fields
+  const [isSignup, setIsSignup] = useState(false);
   const handleChange = (e) => {
-    setInputs((previousState) => ({
-      ...previousState,
+    setInputs((prevState) => ({
+      ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-
-  // handleSubmit For Form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(inputs);
-
-    // ************************************************
-    if (isSignup) {
-      sendRequest("signup")
-        .then(() => dispatch(authAction.login()))
-        .then((data) => console.log(data))
-        .then(() => navigate("/blogs"));
-    } else {
-      sendRequest()
-        .then(() => dispatch(authAction.login()))
-        .then((data) => console.log(data))
-        .then(() => navigate("/blogs"));
-    }
-  };
-
-  // send requests
-  // mehi type use karanne login ekata amatharawa signup eka thiyena nisa
-  const sendRequest = async (type = "signin") => {
+  const sendRequest = async (type = "login") => {
     const res = await axios
       .post(`http://localhost:5000/api/user/${type}`, {
         name: inputs.name,
         email: inputs.email,
         password: inputs.password,
       })
-      .catch((error) => console.log(error));
+      .catch((err) => console.log(err));
 
     const data = await res.data;
-    console.log(data)
+    console.log(data);
     return data;
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(inputs);
+    if (isSignup) {
+      sendRequest("signup")
+        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then(() => dispath(authAction.login()))
+        .then(() => naviagte("/blogs"));
+    } else {
+      sendRequest()
+        .then((data) => localStorage.setItem("userId", data.user._id))
+        .then(() => dispath(authAction.login()))
+        .then(() => naviagte("/blogs"));
+    }
+  };
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <Box
+          maxWidth={400}
           display="flex"
           flexDirection={"column"}
           alignItems="center"
@@ -75,54 +61,50 @@ const Auth = () => {
           boxShadow="10px 10px 20px #ccc"
           padding={3}
           margin="auto"
-          marginTop={10}
+          marginTop={5}
           borderRadius={5}
-          maxWidth={400}
         >
           <Typography variant="h2" padding={3} textAlign="center">
-            {isSignup ? "Register" : "Login"}
+            {isSignup ? "Signup" : "Login"}
           </Typography>
           {isSignup && (
             <TextField
-              margin="normal"
-              placeholder="Enter Your User Name"
-              value={inputs.name}
-              onChange={handleChange}
               name="name"
+              onChange={handleChange}
+              value={inputs.name}
+              placeholder="Name"
+              margin="normal"
             />
-          )}
-          {""}
+          )}{" "}
           <TextField
-            type={"email"}
-            margin="normal"
-            placeholder="Enter Your Email"
-            value={inputs.email}
-            onChange={handleChange}
             name="email"
+            onChange={handleChange}
+            value={inputs.email}
+            type={"email"}
+            placeholder="Email"
+            margin="normal"
           />
           <TextField
-            type={"password"}
-            margin="normal"
-            placeholder="Enter Your Password"
-            value={inputs.password}
-            onChange={handleChange}
             name="password"
+            onChange={handleChange}
+            value={inputs.password}
+            type={"password"}
+            placeholder="Password"
+            margin="normal"
           />
-
           <Button
-            color="warning"
-            sx={{ borderRadius: 3, marginTop: 3 }}
-            variant="contained"
             type="submit"
+            variant="contained"
+            sx={{ borderRadius: 3, marginTop: 3 }}
+            color="warning"
           >
-            {isSignup ? "Sign Up" : "Sign In"}
+            Submit
           </Button>
           <Button
             onClick={() => setIsSignup(!isSignup)}
             sx={{ borderRadius: 3, marginTop: 3 }}
           >
-            Already {isSignup ? "Have" : "Haven't"} an Account.{" "}
-            {isSignup ? "Login" : "Sign Up"} Here
+            Change To {isSignup ? "Login" : "Signup"}
           </Button>
         </Box>
       </form>

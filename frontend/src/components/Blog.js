@@ -1,16 +1,40 @@
 import {
   Avatar,
+  Box,
   Card,
   CardContent,
   CardHeader,
   CardMedia,
+  IconButton,
   Typography,
 } from "@mui/material";
 import React from "react";
-
-const Blog = ({ title, description, imageURL, userName }) => {
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useStyles } from "./utils";
+const Blog = ({ title, description, imageURL, userName, isUser, id }) => {
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const handleEdit = () => {
+    navigate(`/myBlogs/${id}`);
+  };
+  const deleteRequest = async () => {
+    const res = await axios
+      .delete(`http://localhost:5000/api/blog/${id}`)
+      .catch((err) => console.log(err));
+    const data = await res.data;
+    return data;
+  };
+  const handleDelete = () => {
+    deleteRequest()
+      .then(() => navigate("/"))
+      .then(() => navigate("/blogs"));
+  };
   return (
     <div>
+      {" "}
       <Card
         sx={{
           width: "40%",
@@ -23,14 +47,27 @@ const Blog = ({ title, description, imageURL, userName }) => {
           },
         }}
       >
+        {isUser && (
+          <Box display="flex">
+            <IconButton onClick={handleEdit} sx={{ marginLeft: "auto" }}>
+              <ModeEditOutlineIcon color="warning" />
+            </IconButton>
+            <IconButton onClick={handleDelete}>
+              <DeleteForeverIcon color="error" />
+            </IconButton>
+          </Box>
+        )}
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-              {userName}
+            <Avatar
+              className={classes.font}
+              sx={{ bgcolor: "red" }}
+              aria-label="recipe"
+            >
+              {userName ? userName.charAt(0) : ""}
             </Avatar>
           }
           title={title}
-          subheader="September 14, 2016"
         />
         <CardMedia
           component="img"
@@ -38,9 +75,16 @@ const Blog = ({ title, description, imageURL, userName }) => {
           image={imageURL}
           alt="Paella dish"
         />
+
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-           {description}
+          <hr />
+          <br />
+          <Typography
+            className={classes.font}
+            variant="body2"
+            color="text.secondary"
+          >
+            <b>{userName}</b> {": "} {description}
           </Typography>
         </CardContent>
       </Card>
